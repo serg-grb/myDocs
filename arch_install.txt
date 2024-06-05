@@ -1,0 +1,253 @@
+##Arch Linux Install Helper
+#Загрузится с Диска или Флэшки
+
+##НАСТРОЙКА СЕТИ!
+#Проверить соединение с Интернетом
+#Если соединения нет настроить его
+#команды:
+ip a
+#просмотр сетевых карт
+#Статический IP-адрес
+#в файле: /etc/dhcpcd.conf
+#Внести изменения необходимые вам:
+//interface eth0
+//static ip_address=192.168.0.10/24	
+//static routers=192.168.0.1
+//static domain_name_servers=192.168.0.1 8.8.8.8
+#Или использовать NetworkManager
+systemctr enable --now NetworkManager.service
+nmcli con show
+nmcli con mod "Wired connection 1" ipv4.addresses 192.168.1.24/24
+nmcli con mod "Wired connection 1" ipv4.gateway 192.168.1.101
+nmcli con mod "Wired connection 1" ipv4.dns "8.8.8.8,1.1.1.1"
+nmcli con mod "Wired connection 1" ipv4.method manual
+#То-же одной строкой
+sudo nmcli connection modify 'Wired connection 1' ip4 192.168.1.24/24 gw4 192.168.1.101 ipv4.dns 8.8.8.8
+
+##РАЗБИВКА ДИСКА
+#Просмотреть диски компьютера
+fdisk -l
+#Положим необходимый для установки диск "sda"
+#Создаем GPT раздел
+fdisk /dev/sda
+#Получаем приглашение утилиты fdisk далее вводим команды:
+g - для создания GPT раздела
+w - записываем результат
+#Разбивка диска на разделы утилита
+cfdisk /dev/sda
+#Если у вас BIOS создаем раздел размером 31M с типом BIOS_boot
+#Если нужна мультизагрузка создаем раздел 300M - 500M с типом EFI system
+#Если нужен swap-раздел создаем его, размер 1х - 1.5х оперативной памяти с типом Linux SWAP
+#Остальное место можно отдать под систему и файлы пользователя (одним разделом или несколькими) с типом Linux filesystem
+#Сохраняем результаты и выходим из утилиты cfdisk
+#Форматируем созданные разделы перед этим получим их список командой
+fdisk -l
+#Раздел BIOS_boot не форматируем
+#Раздел EFI system форматируем
+mkfs.fat -F 32 /dev/EFI_раздел
+#Раздел SWAP форматируется командой:
+mkswap /dev/раздел_подкачки
+#Остальные разделы в зависимости от нужной файловой системы форматируют
+#EXT4:
+mkfs.ext4 {-L Метка} /dev/нужный_раздел
+#BTRFS:
+mkfs.btrfs {-L Метка} /dev/нужный_раздел
+
+##МОНТИРОВАНИЕ РАЗДЕЛОВ
+#EXT4
+#Корневой раздел
+mount /dev/корневой_раздел /mnt
+#Если есть другие разделы, например для home или var
+#Создаем каталоги под них
+mkdir /mnt/home
+mkdir /mnt/var
+#И монтируем их туда
+mount /dev/home_раздел /mnt/home
+mount /dev/var_раздел /mnt/var
+#BTRFS
+#Значения параметров монтирования для HDD
+$PARAMS = 'rw,relatime,compress=zstd:2,space_cache=v2,autodefrag,nodatacow'
+#Значения параметров монтирования для SSD
+$PARAMS = 'rw,noatime,compress=zstd:2,ssd,space_cache=v2,discard=async'
+#Первоначльно монтируем корневой раздел
+mount /dev/корневой_раздел /mnt
+#Создаем подтома btrfs
+#Корневой
+btrfs su cr /mnt/@
+#Для home
+btrfs su cr /mnt/@home
+#Для var
+btrfs su cr /mnt/@var
+#Для log
+btrfs su cr /mnt/@log
+#Для пакетов
+btrfs su cr /mnt/@pkg
+#Для точек восстановления
+btrfs su cr /mnt/@.snapshots
+#И если используем SWAP-файл, то и для него
+btrfs su cr /mnt/@swap
+#Размонтируем корневой раздел
+umount -R /mnt
+#Теперь монтируем разделы и каталоги в созданные подтома
+#Для корневого раздела
+mount -o $PARAMS,subvol=@ /dev/корневой_раздел /mnt
+#создаем каталоги для монтирования в подтома
+mkdir -p /mnt/{boot,home,var,var/log,var/cache/pacman/pkg,.snapshots}
+#Если будете делать SWAP-файл
+mkdir -p /mnt/{boot,home,var,var/log,var/cache/pacman/pkg,.snapshots,swap}
+#var_подтом
+mount -o $PARAMS,subvol=@var /dev/корневой_раздел /mnt/var
+#log_подтом
+mount -o $PARAMS,subvol=@log /dev/корневой_раздел /mnt/var/log
+#подтом пакетов
+mount -o $PARAMS,subvol=@pkg /dev/корневой_раздел /mnt/var/cache/pacman/pkg
+#подтом для снимков
+mount -o $PARAMS,subvol=@.snapshots /dev/корневой_раздел /mnt/.snapshots
+#подтом для swap
+mount -o $PARAMS,subvol=@swap /dev/корневой_раздел /mnt/swap
+#Если home просто каталог
+mount -o $PARAMS,subvol=@home /dev/корневой_раздел /mnt/home
+#Если home отдельный раздел
+mount -o $PARAMS /dev/home_раздел /mnt/home
+#SWAP-файл или SWAP-раздел
+#Монтируем раздел он должен быть создан при разметке диска
+swapon /dev/swap_раздел
+#Создаем swap-файл
+#BTRFS
+btrfs filesystem mkswapfile --size 4g --uuid clear /mnt/swap/swapfile
+#EXT4
+fallocate -l 4G /mnt/swapfile
+#или
+dd if=/dev/zero of=/mnt/swapfile bs=1M count=4k status=progress
+# и монтируем swap-файл
+swapon /mnt/swap/swapfile
+#Монтируем каталог загрузчика
+#BIOS
+mkdir -p /mnt/boot
+mount /dev/EFI_раздел /mnt/boot
+#EFI
+mkdir -p /mnt/boot/efi
+mount /dev/EFI_раздел /mnt/boot/efi
+
+##УСТАНОВКА ПАКЕТОВ ARCH Linux
+#Для выбора серверов-зеркал посмотрите и отредактируйте файл: /etc/pacman.d/mirrorlist
+#Чем выше сервер в списке тем он приоритетней
+#Отредактировать файл pacman.conf
+#Установка пакетов производится утилитой pacstrap
+pacstrap -i /mnt base base-devel linux-zen linux-zen-headers linux-firmware dosfstools btrfs-progs 
+intel-ucode {amd-ucode }iucode-tool zsh zsh-completions nano git archlinux-keyring
+#base и base-devel - это базовые пакеты и пакеты для разработки
+#Ядра Linux и их компоненты:
+#linux-zen linux-zen-headers
+#linux linux-headers
+#linux-lts linux-lts-headers - стабильное ядро
+#Набор драйверов: linux-firmware
+#Утилиты для файловых систем:
+#dosfstools btrfs-progs
+#Микрокоды для процесоров:
+#Intel intel-ucode
+#AMD amd-ucode
+#Утилиты для обоих типов: iucode-tool
+#Командная оболочка ZHH: zsh zsh-completions
+#Редактор: nano
+
+##НАСТРОЙКА НОВОЙ ARCH Linux
+#Создания таблицы монтирования разделов
+genfstab -U /mnt >> /mnt/etc/fstab
+#Переход в созданную систему
+arch-chroot /mnt
+#Задаем часовой пояс
+ln -sf /usr/share/zoneinfo/Регион/Город /etc/localtime
+#Запускаем синхронизацию времени
+hwclock --systohc
+#Локализация системы:
+#Отредактируем файл /etc/locale.gen
+#раскоментировав нужные языки в кодировке UTF-8 (en_US.UTF-8 UTF-8 и ru_RU.UTF-8 UTF-8)
+#сгенерируем локаль
+locale-gen
+#Создаем и открываем файл локализации системы
+nano /etc/locale.conf
+#И записываем туда: LANG=ru_RU.UTF-8, затем сохраняем
+#Устанавливаем раскладку консоли
+nano /etc/vconsole.conf
+#Первая строка язык KEYMAP=ru
+#Вторая шрифт консоли FONT=cyr-sun16
+#Сохраняем
+#Задаем имя компьютера
+nano /etc/hostname
+#Вводим имя компьютера и сохраняем
+#Редактируем конфигурационный файл доменов
+nano /etc/hosts
+#Пишем в него:
+127.0.0.1 localhost
+::1 localhost
+127.0.0.1 ARCH.localdomain ARCH
+#Сохраняем
+#Создаем образ ядра для памяти initframes
+#Если ядро одно
+mkinitcpio -P
+#Если установлено несколько ядер опция -p и название ядра например:
+mkinitcpio -p linux
+#Если выкакивают сообщения что не хватает модулей типа:
+==> WARNING: Possibly missing firmware for module: XXXXXXXX
+#Надо установить следующие пакеты:
+#для qed, qla1280, qla2xxx, bfa - linux-firmware-qlogic
+#для nfp - linux-firmware-nfp
+#для bnx2x - linux-firmware-bnx2x
+#для liquidio - linux-firmware-liquidio
+#для mlxsw_spectrum - linux-firmware-mellanox
+#И из репозитория AUR:
+#для aic94xx - https://aur.archlinux.org/aic94xx-firmware.git
+#для ast - https://aur.archlinux.org/ast-firmware.git
+#для wd719x - https://aur.archlinux.org/wd719x-firmware.git
+#для xhci_pci - https://aur.archlinux.org/upd72020x-fw.git
+#Устанока из AUR:
+#git clone https://aur.archlinux.org/XXXXX.git
+#cd XXXXX
+#makepkg -sric
+#
+#Задаем пароль суперпользователя для нового linux
+passwd
+#Редактируем файл для получения прав root
+nano /etc/sudoers
+#снимаем комментарий со строки
+# %weel ALL=(ALL:ALL) ALL
+#Сохраняем
+#Создание учетной записи обычного пользователя
+useradd -m -G wheel -s /bin/bash имя_юзера
+#Задем пароль для учетной записи юзера
+passwd имя_юзера
+#Настройка pacman
+nano /etc/pacman.conf
+#Раскомментируйте строчку ниже
+#Где 4 - количество пакетов для одновременной загрузки
+ParallelDownloads = 4
+#Добавить радом строчку
+ILoveCandy
+#Добавьте строку в секцию [options]
+DisableDownloadTimeout
+#Раскоментируйте две строчки
+[multilib]
+include=/etc/pacman.d/mirrorlist
+#Сохраняем
+#Обновляем репозитории всех пакетов
+sudo pacman -Suy
+#Доустановка необходимых пакетов
+pacman -S grub efibootmgr grub-btrfs dhcpcd dhclient networkmanager
+#grub - наш загрузчик граб
+#efibootmgr - пакет нужен для установки EFI загрузчика на компьютерах с UEFI
+#grub-btrfs - пакет нужен для работы grub с файловой системой btrfs
+#dhcpcd dhclient - пакет нужен для настройки соединения с интрнетом, для всех видов проводного соединения
+#networkmanager - пакет нужен для проводного и беспроводного интерфеса
+#Устанавливаем grub
+grub-install /dev/имя_диска
+#Указываем именно имя диска а не раздела!!!!!!
+#Создаем файл конфигурации grub
+grub-mkconfig -o /boot/grub/grub.cfg
+#Выходим из chroot-режима
+exit
+#Размонтируем все разделы
+umount -R /mnt
+#Перезагружаемся не забывая вытащить флешку с установочным образом
+reboot
+#Базовая установка Arch-linux завершена!

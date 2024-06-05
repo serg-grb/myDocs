@@ -1,0 +1,24 @@
+#Создаем файл сервися резервного копирования
+sudo nvim /usr/lib/systemd/system/backup.service
+#Содержимое файла:
+[Unit]
+Description=backup #Описание
+
+[Service]
+Type=simple #Тип сервиса
+ExecStart=/home/dm/mybin/backup #Путь к скрипту
+
+[Install]
+WantedBy=multi-user.target
+
+#Создаем файл таймера для выполнения сервиса имена должны совпадать
+sudo nvim /usr/lib/systemd/system/backup.timer
+#Содержимое файла:
+[Unit]
+Description=my backup #Описание
+
+[Timer]
+OnCalendar=*-*-* 03:00:00 #Время выполнения 3:00 ежедневно
+
+[Install]
+WantedBy=timers.target
