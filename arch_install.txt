@@ -22,7 +22,8 @@ nmcli con mod "Wired connection 1" ipv4.gateway 192.168.1.101
 nmcli con mod "Wired connection 1" ipv4.dns "8.8.8.8,1.1.1.1"
 nmcli con mod "Wired connection 1" ipv4.method manual
 #То-же одной строкой
-sudo nmcli connection modify 'Wired connection 1' ip4 192.168.1.24/24 gw4 192.168.1.101 ipv4.dns 8.8.8.8
+nmcli connection modify 'Wired connection 1' ip4 192.168.1.24/24 gw4 192.168.1.101 ipv4.dns 8.8.8.8
+#если вы настраиваете сеть после завершения установки системы используйте sudo
 
 ##РАЗБИВКА ДИСКА
 #Просмотреть диски компьютера
