@@ -2,11 +2,14 @@
 sudo nvim /usr/lib/systemd/system/backup.service
 #Содержимое файла:
 [Unit]
-Description=backup #Описание
+#Описание
+Description=backup
 
 [Service]
-Type=simple #Тип сервиса
-ExecStart=/home/dm/mybin/backup #Путь к скрипту
+#Тип сервиса
+Type=simple
+#Путь к скрипту
+ExecStart=/home/dm/mybin/backup
 
 [Install]
 WantedBy=multi-user.target
@@ -15,10 +18,12 @@ WantedBy=multi-user.target
 sudo nvim /usr/lib/systemd/system/backup.timer
 #Содержимое файла:
 [Unit]
-Description=my backup #Описание
+#Описание
+Description=my backup
 
 [Timer]
-OnCalendar=*-*-* 03:00:00 #Время выполнения 3:00 ежедневно
+#Время выполнения 3:00 ежедневно
+OnCalendar=*-*-* 03:00:00
 
 [Install]
 WantedBy=timers.target
