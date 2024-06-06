@@ -58,6 +58,4 @@ else
     echo &>/dev/null
 fi
 
-tar --exclude-from=/home/serg/scripts/.backup.excludes -v -z --create --file ${ARCHIVES_DIR}${MN
-OW}/${NOW}.tar.gz --listed-incremental=${ARCHIVES_DIR}${MNOW}/${MNOW}.snar $BACKUP_HOME &> ${ARC
-HIVES_DIR}${MNOW}/${NOW}.log
+tar --exclude-from=/home/serg/scripts/.backup.excludes -v -z --create --file ${ARCHIVES_DIR}${MNOW}/${NOW}.tar.gz --listed-incremental=${ARCHIVES_DIR}${MNOW}/${MNOW}.snar $BACKUP_HOME &> ${ARCHIVES_DIR}${MNOW}/${NOW}.log
