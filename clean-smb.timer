@@ -1,0 +1,10 @@
+[Unit]
+#Описание
+Description=Clean Samba Recycle timer
+
+[Timer]
+#Время выполнения 3:00 ежедневно
+OnCalendar=*-*-* 03:00:00
+
+[Install]
+WantedBy=timers.target

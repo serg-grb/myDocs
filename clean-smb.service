@@ -1,0 +1,12 @@
+[Unit]
+#Описание
+Description=Clean Samba Recycle 
+
+[Service]
+#Тип сервиса
+Type=simple
+#Путь к скрипту
+ExecStart=/home/serg/scripts/cleanSmbRecycle
+
+[Install]
+WantedBy=multi-user.target
