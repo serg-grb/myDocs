@@ -243,6 +243,8 @@ pacman -S grub efibootmgr grub-btrfs dhcpcd dhclient networkmanager
 #Устанавливаем grub
 grub-install /dev/имя_диска
 #Указываем именно имя диска а не раздела!!!!!!
+#Настраиваем GRUB
+nano /etc/default/grub
 #Создаем файл конфигурации grub
 grub-mkconfig -o /boot/grub/grub.cfg
 #Выходим из chroot-режима
