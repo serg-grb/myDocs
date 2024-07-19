@@ -1,0 +1,24 @@
+#Пакеты устанавливает ArchInstall
+#Workstation
+htop openssh iwd nano smartmontools vim wget wireless_tools wpa_supplicant xdg-utils
+#Рабочие столы
+#GNome
+gnome gnome-tweaks gdm
+#KDE Plasma
+ark dolphin egl-wayland konsole kwrite plasma-meta plasma-workspace sddm
+#Графический драйвер
+#VM-Ware / Virtual Box (open source)
+mesa xf86-video-vmware xorg-server xorg-xinit
+#NVidia (proprietary)
+dkms nvidia-dkms xorg-server xorg-xinit
+#Intel (open source)
+mesa intel-media-driver libva-intel-driver vulkan-intel xorg-server xorg-xinit
+#AMD/Ati (open source)
+libva-mesa-driver mesa vulkan-radion xf86-video-amdgpu xf86-video-ati xorg-server xorg-xinit
+#Звук PipeWare
+pipewire pipewire-pulse pipewire-jack lib32-pipewire gst-plugin-pipewire wireplumber
+#Включение в ручном режиме
+systemctl --user enable --now pipewire pipewire.socket pipewire-pulse wireplumber
+#Для непосредственно уменьшения самих задержек установим дополнительный пакет
+realtime-privileges rtkit
+sudo usermod -aG realtime "$USER"
