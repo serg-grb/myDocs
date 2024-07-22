@@ -1,3 +1,7 @@
+#Зеркала загрузки обновлений
+sudo pacman -S reflector rsync curl
+#Проверить скорость и обновить файл зеркал
+sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 #Пакеты устанавливает ArchInstall
 #Workstation
 htop openssh iwd nano smartmontools vim wget wireless_tools wpa_supplicant xdg-utils
