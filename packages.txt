@@ -26,3 +26,7 @@ systemctl --user enable --now pipewire pipewire.socket pipewire-pulse wireplumbe
 #Для непосредственно уменьшения самих задержек установим дополнительный пакет
 realtime-privileges rtkit
 sudo usermod -aG realtime "$USER"
+#Список всех установленных в систему пакетов
+pacman -Qqe > ~/pkglist.txt
+#Список пакетов установленных из AUR
+pacman -Qqm > ~/aurlist.txt
