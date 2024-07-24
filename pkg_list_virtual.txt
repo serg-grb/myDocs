@@ -1,6 +1,6 @@
-aic94xx-firmware
+#aic94xx-firmware
 archlinux-keyring
-ast-firmware
+#ast-firmware
 base
 base-devel
 btrfs-progs
@@ -30,8 +30,8 @@ squashfs-tools
 unace
 unrar
 unzip
-upd72020x-fw
+#upd72020x-fw
 virtualbox-guest-utils
-wd719x-firmware
+#wd719x-firmware
 zsh
 zsh-completions

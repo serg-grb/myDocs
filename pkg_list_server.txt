@@ -1,13 +1,12 @@
-#Пакеты сервера
-aic94xx-firmware
-ananicy-cpp
-ananicy-cpp-debug
+#aic94xx-firmware
+#ananicy-cpp
+#ananicy-cpp-debug
 archlinux-keyring
-ast-firmware
+#ast-firmware
 base
 base-devel
 btrfs-progs
-cachyos-ananicy-rules-git
+#cachyos-ananicy-rules-git
 certbot
 dhclient
 dhcpcd
@@ -27,11 +26,11 @@ man-pages-ru
 nano
 neovim
 networkmanager
-nohang-git
+#nohang-git
 openssh
 samba
-upd72020x-fw
-wd719x-firmware
+#upd72020x-fw
+#wd719x-firmware
 whois
 zsh
 zsh-completions
