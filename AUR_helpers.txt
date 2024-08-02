@@ -1,0 +1,30 @@
+#AUR helper PAMAC
+#Pamac-all
+#Устанавливаем flatpak
+pacman -S flatpak
+#Подключаем репозитороий
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+#Создаем папку для копмиляции AUR пакетов
+mkdir -p ~/build
+cd ~/build
+#Устанавливаем поддержку SNAP пакетов
+git clone https://aur.archlinux.org/snapd.git
+cd snapd
+makepkg -Cris
+cd -
+git clone https://aur.archlinux.org/snapd-glib.git
+cd snapd-glib
+makepkg -Cris
+cd -
+#Устанавливаем зависимости и сам Pamac
+git clone https://aur.archlinux.org/libpamac-full.git
+cd libpamac-full
+makepkg -Cris
+cd -
+git clone https://aur.archlinux.org/pamac-cli.git
+cd pamac-cli
+makepkg -Cris
+cd -
+git clone https://aur.archlinux.org/pamac-all.git
+cd pamac-all
+makepkg -Cris --needed --noconfirm
