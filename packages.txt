@@ -34,3 +34,6 @@ sudo usermod -aG realtime "$USER"
 pacman -Qqe > ~/pkglist.txt
 #Список пакетов установленных из AUR
 pacman -Qqm > ~/aurlist.txt
+#Офисные пакеты:
+#LibreOffice
+libreoffice-fresh libreoffice-fresh-ru
