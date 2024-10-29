@@ -2,6 +2,8 @@
 sudo pacman -S reflector rsync curl
 #Проверить скорость и обновить файл зеркал
 sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+#Проверка орфографии
+aspell aspell-ru (AUR)
 #Пакеты устанавливает ArchInstall
 #Workstation
 htop openssh iwd nano smartmontools vim wget wireless_tools wpa_supplicant xdg-utils
@@ -10,8 +12,8 @@ htop openssh iwd nano smartmontools vim wget wireless_tools wpa_supplicant xdg-u
 gnome gnome-tweaks gdm
 #KDE Plasma
 ark dolphin egl-wayland konsole kwrite plasma-meta plasma-workspace sddm
-#Проверка орфографии
-aspell aspell-ru (AUR)
+#Выпадающий терминал KDE
+yakuake
 #Графический драйвер
 #VM-Ware / Virtual Box (open source)
 mesa xf86-video-vmware xorg-server xorg-xinit
