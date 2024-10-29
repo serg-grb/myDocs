@@ -10,6 +10,8 @@ htop openssh iwd nano smartmontools vim wget wireless_tools wpa_supplicant xdg-u
 gnome gnome-tweaks gdm
 #KDE Plasma
 ark dolphin egl-wayland konsole kwrite plasma-meta plasma-workspace sddm
+#Проверка орфографии
+aspell aspell-ru (AUR)
 #Графический драйвер
 #VM-Ware / Virtual Box (open source)
 mesa xf86-video-vmware xorg-server xorg-xinit
