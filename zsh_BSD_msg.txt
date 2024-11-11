@@ -1,0 +1,31 @@
+Message from zsh-5.9_4:
+
+--
+==========================================================
+
+By default, zsh looks for system-wide defaults in
+/usr/local/etc.
+
+If you previously set up /etc/zprofile, /etc/zshenv, etc.,
+either move them to /usr/local/etc or rebuild zsh with the
+ETCDIR option enabled.
+
+==========================================================
+=====
+Message from zsh-syntax-highlighting-0.8.0,1:
+
+--
+Add the line below to *the end of* your .zshrc to enable highlighting.
+
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+=====
+Message from ohmyzsh-20240512:
+
+--
+To install Oh My Zsh:
+
+1. (optionally) Backup your existing ~/.zshrc file
+cp ~/.zshrc ~/.zshrc.orig
+
+2. Create a new zsh configuration file
+cp /usr/local/share/ohmyzsh/templates/zshrc.zsh-template ~/.zshrc
