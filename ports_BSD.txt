@@ -1,13 +1,30 @@
-##Установка приложения из ПОРТОВ
-#Переходим в папку приложения в ПОРТАХ
+## Установка и обновления ПОРТОВ
+# Устанавливаем git
+pkg install git
+# или
+cd /usr/ports/devel/git/ && make install clean
+# Подключаем репозиторий ПОРТОВ из git
+git clone https://git.FreeBSD.org/ports.git /usr/ports
+# Если получаем ошибку:
+fatal: destination path '/usr/ports' already exists and is not an empty directory
+# Удаляем старые ПОРТЫ
+rm -rf /usr/ports/
+# и снова подключаем ПОРТЫ из git
+# Обновление ПОРТОВ
+git -C /usr/ports pull
+# или
+cd /usr/ports
+git pull
+## Установка приложения из ПОРТОВ
+# Переходим в папку приложения в ПОРТАХ
 cd /usr/ports/<Группа>/<Название>/
-#Сконфигурировать перед установкой вместе с зависимостями
+# Сконфигурировать перед установкой вместе с зависимостями
 make config-recursive
-#Запускаем установку
+# Запускаем установку
 make install clean
-##Удаление приложения из ПОРТОВ
+## Удаление приложения из ПОРТОВ
 cd /usr/ports/<Группа>/<Название>/
-#Удаление
+# Удаление
 make deinstall
-#Очистить конфигурационные файлы
+# Очистить конфигурационные файлы
 make rmconfig-recursive
