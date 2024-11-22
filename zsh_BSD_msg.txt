@@ -29,3 +29,41 @@ cp ~/.zshrc ~/.zshrc.orig
 
 2. Create a new zsh configuration file
 cp /usr/local/share/ohmyzsh/templates/zshrc.zsh-template ~/.zshrc
+
+## Без Oh My Zsh
+Message from zsh-autosuggestions-0.7.0:
+
+--
+Add the line below to your .zshrc to enable auto suggestions.
+
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+=====
+Message from git-prompt.zsh-2.4.0:
+
+--
+Final git-prompt.zsh setup instructions:
+
+To add the git status indicator to your prompt, source git-prompt.zsh in
+one of your Zsh startup files using
+
+source /usr/local/share/git-prompt.zsh/git-prompt.zsh
+
+Next, add ' $(gitprompt)%# ' to the end of the PROMPT value like in the
+example below.
+
+PROMPT='%n@%m %~ $(gitprompt)%# '
+
+For details, refer to
+
+/usr/local/share/doc/git-prompt.zsh/README.md
+
+or
+
+https://github.com/woefe/git-prompt.zsh
+=====
+Message from zsh-syntax-highlighting-0.8.0,1:
+
+--
+Add the line below to *the end of* your .zshrc to enable highlighting.
+
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
