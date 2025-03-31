@@ -1,0 +1,11 @@
+[Unit]
+Description=Backup Samba directory
+
+
+[Service]
+Type=simple
+ExecStart=/home/serg/scripts/backup
+
+
+[Install]
+WantedBy=multi-user.target

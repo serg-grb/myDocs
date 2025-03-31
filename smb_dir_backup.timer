@@ -1,0 +1,10 @@
+[Unit]
+Description=Backup Samba directory Timer
+#Описание
+
+[Timer]
+OnCalendar=Fri *-*-* 03:00:00
+#Время выполнения Пятница 3:00 еженедельно
+
+[Install]
+WantedBy=timers.target
